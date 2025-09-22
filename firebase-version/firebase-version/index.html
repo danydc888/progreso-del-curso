@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progreso del Curso - Registro Escolar</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Progreso del Curso">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content" style="display:flex;align-items:center;gap:1rem;">
+                <button class="btn btn-back" id="change-profile-btn">
+                    <i class="fas fa-user-cog"></i> Cambiar Perfil
+                </button>
+            </div>
+            <h1 class="main-title-centered"><i class="fas fa-graduation-cap"></i> Progreso del Curso</h1>
+            <div class="profile-info">
+                <!-- Firebase Authentication -->
+                <div id="user-info" style="margin-bottom: 1rem;">
+                    <!-- Botón de login o info del usuario se mostrará aquí -->
+                </div>
+                
+                <div class="current-profile" id="current-profile-info">
+                    <div class="profile-avatar-small" id="profile-avatar">
+                        <!-- Avatar will be populated by JavaScript -->
+                    </div>
+                    <div class="profile-name" id="profile-name">
+                        <!-- Name will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-tab="week">
+                <i class="fas fa-calendar-week"></i>
+                <span>Mi semana</span>
+            </button>
+            <button class="nav-tab" data-tab="dashboard">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Calendario</span>
+            </button>
+            <button class="nav-tab" data-tab="books">
+                <i class="fas fa-book"></i>
+                <span>Mis Actividades</span>
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Week Tab -->
+            <div class="tab-content active" id="week">
+                <div class="week-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+                    <button class="btn btn-outline" id="prev-week"><i class="fas fa-chevron-left"></i></button>
+                    <h2 id="week-title" style="margin:0 auto;text-align:center;font-size:1.3rem;font-weight:600;"></h2>
+                    <button class="btn btn-outline" id="next-week"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div id="week-calendar" class="week-calendar" style="display:grid;grid-template-columns:repeat(7,1fr);gap:1.5rem;"></div>
+            </div>
+            <!-- Calendario Tab -->
+            <div class="tab-content" id="dashboard">
+                <div class="dashboard-layout" style="display:flex;gap:2.5rem;align-items:flex-start;">
+                    <div class="calendar-section">
+                        <div class="calendar-layout" style="display:flex;align-items:stretch;gap:2rem;">
+                            <div class="calendar-month-selector" id="calendar-month-selector"></div>
+                            <div style="flex:1;display:flex;flex-direction:column;">
+                                <div class="calendar-header">
+                                    <button class="btn btn-outline" id="prev-month"><i class="fas fa-chevron-left"></i></button>
+                                    <h2 id="calendar-title">Mes Año</h2>
+                                    <button class="btn btn-outline" id="next-month"><i class="fas fa-chevron-right"></i></button>
+                                </div>
+                                <div class="calendar-table" id="calendar-table"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="activities-panel" style="flex:1;min-width:320px;max-width:420px;">
+                        <div class="daily-activities" id="daily-activities" style="display:none;">
+                            <div class="daily-header">
+                                <h3 id="selected-date">Selecciona una fecha</h3>
+                                <button class="btn btn-primary" id="add-activity-btn">
+                                    <i class="fas fa-plus"></i> Registrar Actividad
+                                </button>
+                            </div>
+                            <div class="activities-list" id="activities-list">
+                                <p class="no-data">No hay actividades registradas para este día</p>
+                            </div>
+                        </div>
+                        <div class="activities-placeholder" id="activities-placeholder" style="display:block;background:#f8fafc;border-radius:16px;padding:2.5rem 1.5rem;text-align:center;color:#b0b4ba;font-size:1.1rem;font-weight:500;box-shadow:0 2px 8px rgba(59,130,246,0.04);">
+                            SELECCIONA UN DÍA PARA AGREGAR ACTIVIDADES
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mis Actividades Tab -->
+            <div class="tab-content" id="books">
+                <div class="section-header" style="display:flex;justify-content:space-between;align-items:center;">
+                    <h2>Mis Actividades</h2>
+                    <button class="btn btn-primary" onclick="openAddNewActivityModal()" style="display:flex;align-items:center;gap:0.5rem;">
+                        <i class="fas fa-plus"></i>
+                        AGREGAR ACTIVIDAD
+                    </button>
+                </div>
+                <div class="books-grid">
+                    <a class="book-card" data-book="lam" href="libro.html?book=lam">
+                        <div class="book-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h3>LIBRO LAM</h3>
+                        <p>Actividades de lectura y escritura</p>
+                    </a>
+                    
+                    <a class="book-card" data-book="brainquest" href="libro.html?book=brainquest">
+                        <div class="book-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>BRAINQUEST</h3>
+                        <p>Ejercicios de desarrollo mental</p>
+                    </a>
+                    
+                    <a class="book-card" data-book="apps" href="libro.html?book=apps">
+                        <div class="book-icon">
+                            <i class="fas fa-tablet-alt"></i>
+                        </div>
+                        <h3>APPS</h3>
+                        <p>Resumen de Matific, Duo ABC y Starfall</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Modals -->
+            <!-- Add Activity Modal -->
+            <div class="modal" id="add-activity-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Agregar Actividad</h3>
+                        <button class="modal-close">&times;</button>
+                    </div>
+                    <form id="add-activity-form">
+                        <input type="date" id="activity-date" style="display: none;">
+                        <div class="form-group">
+                            <label for="activity-book">Seleccionar actividad</label>
+                            <select id="activity-book" required>
+                                <option value="">Seleccionar actividad</option>
+                                <option value="lam">LIBRO LAM</option>
+                                <option value="brainquest">BRAINQUEST</option>
+                                <option value="matific">MATIFIC</option>
+                                <option value="duoabc">DUO ABC</option>
+                                <option value="starfall">STARFALL</option>
+                                <optgroup label="Actividades Personalizadas" id="custom-activities-group">
+                                    <!-- Las actividades personalizadas se cargarán aquí dinámicamente -->
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="form-group" id="description-group" style="display: none;">
+                            <label for="activity-description">Descripción de la Actividad</label>
+                            <input type="text" id="activity-description" placeholder="Páginas: separa con comas (1,2,3) o usa guión para rangos (1-5)" required>
+                        </div>
+                        <div class="form-group" id="notes-group" style="display: none;">
+                            <label for="activity-notes">Notas (opcional)</label>
+                            <textarea id="activity-notes" placeholder="Observaciones sobre el progreso, dificultades, etc." rows="3"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary modal-close">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Registrar Actividad</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Add New Activity Modal -->
+            <div class="modal" id="add-new-activity-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Agregar Nueva Actividad</h3>
+                        <button class="modal-close" onclick="closeAddNewActivityModal()">&times;</button>
+                    </div>
+                    <form id="add-new-activity-form">
+                        <div class="form-group">
+                            <label for="new-activity-type">Tipo de Actividad</label>
+                            <select id="new-activity-type" required>
+                                <option value="">Seleccionar tipo</option>
+                                <option value="libro">LIBRO</option>
+                                <option value="app">APP</option>
+                                <option value="material">MATERIAL DIDACTICO</option>
+                                <option value="extracurricular">ACTIVIDAD EXTRACURRICULAR</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-activity-name">Nombre de la Actividad</label>
+                            <input type="text" id="new-activity-name" placeholder="Ej: Matemáticas Avanzadas, Piano, etc." required>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-activity-description">Descripción</label>
+                            <textarea id="new-activity-description" placeholder="Describe brevemente la actividad..." rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Seleccionar Color</label>
+                            <div class="color-picker" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
+                                <div class="color-option" data-color="blue" style="width: 30px; height: 30px; border-radius: 50%; background: #3b82f6; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;" title="Azul"></div>
+                                <div class="color-option" data-color="purple" style="width: 30px; height: 30px; border-radius: 50%; background: #8b5cf6; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;" title="Morado"></div>
+                                <div class="color-option" data-color="red" style="width: 30px; height: 30px; border-radius: 50%; background: #ef4444; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;" title="Rojo"></div>
+                                <div class="color-option" data-color="green" style="width: 30px; height: 30px; border-radius: 50%; background: #10b981; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;" title="Verde"></div>
+                                <div class="color-option" data-color="orange" style="width: 30px; height: 30px; border-radius: 50%; background: #f59e0b; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;" title="Naranja"></div>
+                                <div class="color-option" data-color="pink" style="width: 30px; height: 30px; border-radius: 50%; background: #ec4899; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;" title="Rosa"></div>
+                                <div class="color-option" data-color="teal" style="width: 30px; height: 30px; border-radius: 50%; background: #14b8a6; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;" title="Turquesa"></div>
+                                <div class="color-option" data-color="indigo" style="width: 30px; height: 30px; border-radius: 50%; background: #6366f1; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;" title="Índigo"></div>
+                                <div class="color-option" data-color="yellow" style="width: 30px; height: 30px; border-radius: 50%; background: #eab308; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;" title="Amarillo"></div>
+                                <div class="color-option" data-color="emerald" style="width: 30px; height: 30px; border-radius: 50%; background: #059669; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;" title="Esmeralda"></div>
+                                <div class="color-option" data-color="rose" style="width: 30px; height: 30px; border-radius: 50%; background: #f43f5e; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;" title="Rosa Intenso"></div>
+                                <div class="color-option" data-color="slate" style="width: 30px; height: 30px; border-radius: 50%; background: #64748b; cursor: pointer; border: 2px solid transparent; transition: all 0.2s;" title="Gris"></div>
+                            </div>
+                            <input type="hidden" id="new-activity-color" value="blue">
+                        </div>
+                        <div class="form-group">
+                            <label>Seleccionar Icono</label>
+                            <div class="icon-picker" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
+                                <div class="icon-option" data-icon="fas fa-book-open" style="width: 40px; height: 40px; border-radius: 8px; background: #f8f9fa; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Libro Abierto">
+                                    <i class="fas fa-book-open" style="font-size: 1.2rem; color: #374151;"></i>
+                                </div>
+                                <div class="icon-option" data-icon="fas fa-mobile-alt" style="width: 40px; height: 40px; border-radius: 8px; background: #f8f9fa; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Celular">
+                                    <i class="fas fa-mobile-alt" style="font-size: 1.2rem; color: #374151;"></i>
+                                </div>
+                                <div class="icon-option" data-icon="fas fa-tablet-alt" style="width: 40px; height: 40px; border-radius: 8px; background: #f8f9fa; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="iPad">
+                                    <i class="fas fa-tablet-alt" style="font-size: 1.2rem; color: #374151;"></i>
+                                </div>
+                                <div class="icon-option" data-icon="fas fa-laptop" style="width: 40px; height: 40px; border-radius: 8px; background: #f8f9fa; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Computadora">
+                                    <i class="fas fa-laptop" style="font-size: 1.2rem; color: #374151;"></i>
+                                </div>
+                                <div class="icon-option" data-icon="fas fa-pen" style="width: 40px; height: 40px; border-radius: 8px; background: #f8f9fa; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Lápiz con Hoja">
+                                    <i class="fas fa-pen" style="font-size: 1.2rem; color: #374151;"></i>
+                                </div>
+                                <div class="icon-option" data-icon="fas fa-calculator" style="width: 40px; height: 40px; border-radius: 8px; background: #f8f9fa; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Calculadora">
+                                    <i class="fas fa-calculator" style="font-size: 1.2rem; color: #374151;"></i>
+                                </div>
+                                <div class="icon-option" data-icon="fas fa-swimmer" style="width: 40px; height: 40px; border-radius: 8px; background: #f8f9fa; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Persona Nadando">
+                                    <i class="fas fa-swimmer" style="font-size: 1.2rem; color: #374151;"></i>
+                                </div>
+                                <div class="icon-option" data-icon="fas fa-running" style="width: 40px; height: 40px; border-radius: 8px; background: #f8f9fa; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Persona Corriendo">
+                                    <i class="fas fa-running" style="font-size: 1.2rem; color: #374151;"></i>
+                                </div>
+                                <div class="icon-option" data-icon="fas fa-guitar" style="width: 40px; height: 40px; border-radius: 8px; background: #f8f9fa; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Guitarra">
+                                    <i class="fas fa-guitar" style="font-size: 1.2rem; color: #374151;"></i>
+                                </div>
+                                <div class="icon-option" data-icon="fas fa-music" style="width: 40px; height: 40px; border-radius: 8px; background: #f8f9fa; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Símbolo Musical">
+                                    <i class="fas fa-music" style="font-size: 1.2rem; color: #374151;"></i>
+                                </div>
+                                <div class="icon-option" data-icon="fas fa-robot" style="width: 40px; height: 40px; border-radius: 8px; background: #f8f9fa; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Robot">
+                                    <i class="fas fa-robot" style="font-size: 1.2rem; color: #374151;"></i>
+                                </div>
+                                <div class="icon-option" data-icon="fas fa-futbol" style="width: 40px; height: 40px; border-radius: 8px; background: #f8f9fa; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Balón Fútbol">
+                                    <i class="fas fa-futbol" style="font-size: 1.2rem; color: #374151;"></i>
+                                </div>
+                                <div class="icon-option" data-icon="fas fa-basketball-ball" style="width: 40px; height: 40px; border-radius: 8px; background: #f8f9fa; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Balón Básquetbol">
+                                    <i class="fas fa-basketball-ball" style="font-size: 1.2rem; color: #374151;"></i>
+                                </div>
+                                <div class="icon-option" data-icon="fas fa-utensils" style="width: 40px; height: 40px; border-radius: 8px; background: #f8f9fa; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Comida">
+                                    <i class="fas fa-utensils" style="font-size: 1.2rem; color: #374151;"></i>
+                                </div>
+                                <div class="icon-option" data-icon="fas fa-hammer" style="width: 40px; height: 40px; border-radius: 8px; background: #f8f9fa; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Manualidades">
+                                    <i class="fas fa-hammer" style="font-size: 1.2rem; color: #374151;"></i>
+                                </div>
+                                <div class="icon-option" data-icon="fas fa-puzzle-piece" style="width: 40px; height: 40px; border-radius: 8px; background: #f8f9fa; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Rompecabezas">
+                                    <i class="fas fa-puzzle-piece" style="font-size: 1.2rem; color: #374151;"></i>
+                                </div>
+                                <div class="icon-option" data-icon="fas fa-paint-brush" style="width: 40px; height: 40px; border-radius: 8px; background: #f8f9fa; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Pintura">
+                                    <i class="fas fa-paint-brush" style="font-size: 1.2rem; color: #374151;"></i>
+                                </div>
+                                <div class="icon-option" data-icon="fas fa-code" style="width: 40px; height: 40px; border-radius: 8px; background: #f8f9fa; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Programación">
+                                    <i class="fas fa-code" style="font-size: 1.2rem; color: #374151;"></i>
+                                </div>
+                                <div class="icon-option" data-icon="fas fa-language" style="width: 40px; height: 40px; border-radius: 8px; background: #f8f9fa; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Idiomas">
+                                    <i class="fas fa-language" style="font-size: 1.2rem; color: #374151;"></i>
+                                </div>
+                                <div class="icon-option" data-icon="fas fa-bible" style="width: 40px; height: 40px; border-radius: 8px; background: #f8f9fa; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Biblia">
+                                    <i class="fas fa-bible" style="font-size: 1.2rem; color: #374151;"></i>
+                                </div>
+                            </div>
+                            <input type="hidden" id="new-activity-icon" value="fas fa-book-open">
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="closeAddNewActivityModal()">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Agregar Actividad</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <!-- Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        
+        <!-- Firebase Configuration - Debug Version -->
+        <script>
+        console.log('=== INICIANDO DEBUG FIREBASE ===');
+        
+        // Manejador de errores global para capturar errores que cierran la página
+        window.addEventListener('error', function(event) {
+            console.error('🚨 ERROR GLOBAL CAPTURADO:', event.error);
+            console.error('Mensaje:', event.message);
+            console.error('Archivo:', event.filename);
+            console.error('Línea:', event.lineno);
+            console.error('Columna:', event.colno);
+            
+            // Mostrar error en pantalla
+            const userInfo = document.getElementById('user-info');
+            if (userInfo) {
+                userInfo.innerHTML = `
+                    <div style="background: #fef2f2; border: 2px solid #ef4444; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <h3 style="margin: 0 0 0.5rem 0; color: #dc2626;">🚨 Error Global</h3>
+                        <p style="margin: 0 0 0.5rem 0; color: #dc2626;"><strong>Error:</strong> ${event.message}</p>
+                        <p style="margin: 0; color: #dc2626; font-size: 0.8rem;"><strong>Archivo:</strong> ${event.filename}:${event.lineno}</p>
+                    </div>
+                `;
+            }
+        });
+        
+        // Manejador de errores no capturados
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('🚨 PROMISE RECHAZADA:', event.reason);
+            console.error('Promise:', event.promise);
+            
+            // Mostrar error en pantalla
+            const userInfo = document.getElementById('user-info');
+            if (userInfo) {
+                userInfo.innerHTML = `
+                    <div style="background: #fef2f2; border: 2px solid #ef4444; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <h3 style="margin: 0 0 0.5rem 0; color: #dc2626;">🚨 Error de Promise</h3>
+                        <p style="margin: 0; color: #dc2626;"><strong>Error:</strong> ${event.reason}</p>
+                    </div>
+                `;
+            }
+        });
+        
+        // Verificar que el elemento user-info existe
+        const userInfo = document.getElementById('user-info');
+            console.log('Elemento user-info encontrado:', userInfo);
+            
+            if (!userInfo) {
+                console.error('ERROR: No se encontró el elemento user-info');
+                alert('ERROR: No se encontró el elemento user-info');
+            } else {
+                console.log('Elemento user-info encontrado correctamente');
+            }
+            
+            // Mostrar botón de prueba inmediatamente
+            if (userInfo) {
+                userInfo.innerHTML = `
+                    <div style="background: #f0f9ff; border: 2px solid #0ea5e9; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <h3 style="margin: 0 0 0.5rem 0; color: #0c4a6e;">🧪 MODO DEBUG</h3>
+                        <p style="margin: 0 0 0.5rem 0; color: #0c4a6e;">Firebase se está cargando...</p>
+                        <button onclick="alert('Botón de prueba funcionando!')" 
+                                style="background: #0ea5e9; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">
+                            Botón de Prueba
+                        </button>
+                    </div>
+                `;
+                console.log('Botón de prueba mostrado');
+            }
+            
+            // Configuración de Firebase
+            const firebaseConfig = {
+                apiKey: "AIzaSyBDfCnPZnY5RMp5DGDLKXklcAHDJUGdbOs",
+                authDomain: "progreso-del-curso.firebaseapp.com",
+                projectId: "progreso-del-curso",
+                storageBucket: "progreso-del-curso.firebasestorage.app",
+                messagingSenderId: "494825516539",
+                appId: "1:494825516539:web:925cfa0dd0c0a7999cef5e"
+            };
+            
+            console.log('Configuración Firebase:', firebaseConfig);
+            
+            // Cargar Firebase desde CDN - Versión 9 (compatible con navegadores)
+            const script1 = document.createElement('script');
+            script1.src = 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js';
+            script1.onload = () => {
+                console.log('✅ Firebase App cargado');
+                
+                const script2 = document.createElement('script');
+                script2.src = 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js';
+                script2.onload = () => {
+                    console.log('✅ Firebase Auth cargado');
+                    
+                    const script3 = document.createElement('script');
+                    script3.src = 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js';
+                    script3.onload = () => {
+                        console.log('✅ Firebase Firestore cargado');
+                        
+                        try {
+                            // Inicializar Firebase
+                            const app = firebase.initializeApp(firebaseConfig);
+                            const auth = firebase.auth();
+                            const db = firebase.firestore();
+                            const provider = new firebase.auth.GoogleAuthProvider();
+                            
+                            console.log('✅ Firebase inicializado correctamente');
+                            
+                             // Mostrar botón de Google Login
+                             if (userInfo) {
+                                 userInfo.innerHTML = `
+                                     <button onclick="signInWithGoogle()" 
+                                             style="background: #4285f4; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; margin-bottom: 1rem;">
+                                         <svg width="20" height="20" viewBox="0 0 24 24">
+                                             <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                             <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                             <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                             <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                                         </svg>
+                                         Iniciar Sesión con Google
+                                     </button>
+                                 `;
+                                 console.log('✅ Botón de Google Login mostrado');
+                             }
+                             
+                             // Función para iniciar sesión con Google (usando redirección)
+                             window.signInWithGoogle = async function() {
+                                 try {
+                                     console.log('=== INICIANDO LOGIN ===');
+                                     console.log('Firebase auth:', firebase.auth());
+                                     console.log('Provider:', provider);
+                                     
+                                     // Mostrar mensaje de carga
+                                     if (userInfo) {
+                                         userInfo.innerHTML = `
+                                             <div style="background: #fef3c7; border: 2px solid #f59e0b; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                                                 <h3 style="margin: 0 0 0.5rem 0; color: #92400e;">🔄 Iniciando Sesión...</h3>
+                                                 <p style="margin: 0; color: #92400e;">Redirigiendo a Google...</p>
+                                             </div>
+                                         `;
+                                     }
+                                     
+                                     // Usar popup con manejo robusto de errores
+                                     console.log('Ejecutando signInWithPopup...');
+                                     
+                                     // Verificar que no hay otro popup abierto
+                                     if (window.isSigningIn) {
+                                         console.log('Ya hay un proceso de login en curso, esperando...');
+                                         return;
+                                     }
+                                     
+                                     window.isSigningIn = true;
+                                     
+                                     try {
+                                         const result = await firebase.auth().signInWithPopup(provider);
+                                         console.log('✅ Login exitoso con popup:', result);
+                                         
+                                         if (result.user) {
+                                             console.log('Usuario autenticado:', result.user);
+                                             showUserInfo(result.user);
+                                         }
+                                         
+                                     } catch (popupError) {
+                                         console.error('Error en popup:', popupError);
+                                         
+                                         // Si el popup fue bloqueado o cerrado, intentar con redirección
+                                         if (popupError.code === 'auth/popup-closed-by-user' || 
+                                             popupError.code === 'auth/popup-blocked' ||
+                                             popupError.message.includes('popup')) {
+                                             
+                                             console.log('Popup falló, intentando con redirección...');
+                                             await firebase.auth().signInWithRedirect(provider);
+                                             return; // La redirección se ejecutará
+                                         }
+                                         
+                                         throw popupError; // Re-lanzar otros errores
+                                     } finally {
+                                         window.isSigningIn = false;
+                                     }
+                                     
+                                 } catch (error) {
+                                     console.error('❌ ERROR EN LOGIN:', error);
+                                     console.error('Tipo de error:', typeof error);
+                                     console.error('Mensaje:', error.message);
+                                     console.error('Stack:', error.stack);
+                                     
+                                     // Mostrar error en pantalla
+                                     if (userInfo) {
+                                         userInfo.innerHTML = `
+                                             <div style="background: #fef2f2; border: 2px solid #ef4444; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                                                 <h3 style="margin: 0 0 0.5rem 0; color: #dc2626;">❌ Error en Login</h3>
+                                                 <p style="margin: 0 0 0.5rem 0; color: #dc2626;"><strong>Error:</strong> ${error.message}</p>
+                                                 <p style="margin: 0; color: #dc2626; font-size: 0.8rem;"><strong>Tipo:</strong> ${typeof error}</p>
+                                                 <button onclick="signInWithGoogle()" 
+                                                         style="background: #4285f4; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; margin-top: 0.5rem;">
+                                                     Intentar de Nuevo
+                                                 </button>
+                                             </div>
+                                         `;
+                                     }
+                                     
+                                     // También mostrar alert para asegurar que se vea
+                                     alert('Error al iniciar sesión: ' + error.message + '\n\nTipo: ' + typeof error);
+                                 }
+                             };
+                             
+                             // Función para mostrar información del usuario
+                             function showUserInfo(user) {
+                                 if (userInfo) {
+                                     userInfo.innerHTML = `
+                                         <div style="background: #f0fdf4; border: 2px solid #22c55e; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                                             <h3 style="margin: 0 0 0.5rem 0; color: #166534;">✅ Usuario Autenticado</h3>
+                                             <p style="margin: 0 0 0.5rem 0; color: #166534;">Hola, ${user.displayName || user.email}!</p>
+                                             <button onclick="signOutGoogle()" 
+                                                     style="background: #ef4444; color: white; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">
+                                                 Cerrar Sesión
+                                             </button>
+                                         </div>
+                                     `;
+                                 }
+                             }
+                             
+                             // Verificar si hay un resultado de redirección
+                             firebase.auth().getRedirectResult().then((result) => {
+                                 console.log('Resultado de redirección:', result);
+                                 console.log('User en resultado:', result.user);
+                                 console.log('Credential en resultado:', result.credential);
+                                 
+                                 if (result.user) {
+                                     // Usuario logueado exitosamente
+                                     const user = result.user;
+                                     console.log('Login exitoso desde redirección:', user.email);
+                                     showUserInfo(user);
+                                 } else {
+                                     console.log('No hay usuario en resultado de redirección');
+                                 }
+                             }).catch((error) => {
+                                 console.error('Error en redirección:', error);
+                             });
+                             
+                             // Verificar estado de autenticación (esto se ejecuta siempre)
+                             firebase.auth().onAuthStateChanged((user) => {
+                                 console.log('Estado de autenticación cambiado:', user);
+                                 if (user) {
+                                     console.log('Usuario logueado:', user.email);
+                                     showUserInfo(user);
+                                 } else {
+                                     console.log('No hay usuario logueado');
+                                 }
+                             });
+                             
+                             // Función para cerrar sesión
+                             window.signOutGoogle = async function() {
+                                 try {
+                                     await firebase.auth().signOut();
+                                     console.log('Logout exitoso');
+                                     location.reload(); // Recargar la página
+                                 } catch (error) {
+                                     console.error('Error en logout:', error);
+                                     alert('Error al cerrar sesión: ' + error.message);
+                                 }
+                             };
+                            
+                        } catch (error) {
+                            console.error('❌ Error inicializando Firebase:', error);
+                            if (userInfo) {
+                                userInfo.innerHTML = `
+                                    <div style="background: #fef2f2; border: 2px solid #ef4444; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                                        <h3 style="margin: 0 0 0.5rem 0; color: #dc2626;">❌ ERROR FIREBASE</h3>
+                                        <p style="margin: 0; color: #dc2626;">Error: ${error.message}</p>
+                                    </div>
+                                `;
+                            }
+                        }
+                    };
+                    script3.onerror = () => {
+                        console.error('❌ Error cargando Firebase Firestore');
+                    };
+                    document.head.appendChild(script3);
+                };
+                script2.onerror = () => {
+                    console.error('❌ Error cargando Firebase Auth');
+                };
+                document.head.appendChild(script2);
+            };
+            script1.onerror = () => {
+                console.error('❌ Error cargando Firebase App');
+            };
+            document.head.appendChild(script1);
+            
+            console.log('=== FIN DEBUG FIREBASE ===');
+        </script>
+        
+        <!-- App Script (debe cargarse DESPUÉS que Firebase) -->
+        <script src="app.js"></script>
+        
+        <!-- Script simple para mostrar el perfil -->
+        <script>
+            // Función simple que se ejecuta inmediatamente
+            function mostrarPerfil() {
+                const profileAvatar = document.getElementById('profile-avatar');
+                const profileName = document.getElementById('profile-name');
+                
+                if (profileAvatar && profileName) {
+                    const profileData = sessionStorage.getItem('currentProfile');
+                    if (profileData) {
+                        const profile = JSON.parse(profileData);
+                        
+                        // Usar el icono del avatar en lugar de las iniciales
+                        const avatarIcon = getAvatarIcon(profile.avatar);
+                        profileAvatar.innerHTML = avatarIcon;
+                        profileName.textContent = profile.name;
+                        
+                        // Aplicar color del perfil si existe
+                        if (profile.color) {
+                            const colorMap = {
+                                'blue': '#3b82f6',
+                                'purple': '#8b5cf6', 
+                                'red': '#ef4444',
+                                'green': '#10b981',
+                                'orange': '#f59e0b',
+                                'pink': '#ec4899',
+                                'teal': '#14b8a6',
+                                'indigo': '#6366f1',
+                                'yellow': '#eab308',
+                                'emerald': '#059669',
+                                'rose': '#f43f5e',
+                                'slate': '#64748b'
+                            };
+                            const color = colorMap[profile.color] || '#3b82f6';
+                            profileAvatar.style.backgroundColor = color;
+                        } else {
+                            profileAvatar.style.backgroundColor = '#3b82f6';
+                        }
+                        
+                        console.log('Perfil mostrado:', profile.avatar, profile.name);
+                    } else {
+                        profileAvatar.innerHTML = '?';
+                        profileName.textContent = 'Sin perfil';
+                        profileAvatar.style.backgroundColor = '#ccc';
+                    }
+                }
+            }
+            
+            // Función para obtener el icono del avatar
+            function getAvatarIcon(avatarType) {
+                const iconMap = {
+                    'boy1': '👦',
+                    'girl1': '👧',
+                    'cat': '🐱',
+                    'robot': '🤖',
+                    'alien': '👽',
+                    'sunglasses': '😎',
+                    'lion': '🦁',
+                    'bee': '🐝',
+                    'dog': '🐶',
+                    'sparkles': '✨',
+                    'unicorn': '🦄',
+                    'chick': '🐥'
+                };
+                return iconMap[avatarType] || '👤';
+            }
+            
+            // Ejecutar inmediatamente
+            mostrarPerfil();
+            
+            // También ejecutar cuando la página esté cargada
+            window.addEventListener('load', mostrarPerfil);
+            
+            // Y ejecutar cada segundo por si acaso
+            setInterval(mostrarPerfil, 1000);
+        </script>
+    </div>
+<!-- Modal de confirmación de eliminación de actividad -->
+<div class="modal" id="delete-confirm-modal" style="display:none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Eliminar Actividad</h3>
+            <button class="modal-close" onclick="closeDeleteConfirmModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>¿Estás seguro de que quieres eliminar esta actividad?</p>
+            <div class="form-actions" style="margin-top:1.5rem;">
+                <button class="btn btn-secondary" onclick="closeDeleteConfirmModal()">Cancelar</button>
+                <button class="btn btn-danger" id="confirm-delete-activity-btn">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmación de eliminación de actividad personalizada -->
+<div class="modal" id="delete-custom-activity-modal" style="display:none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Eliminar Actividad Personalizada</h3>
+            <button class="modal-close" onclick="closeDeleteCustomActivityModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>¿Estás seguro de que quieres eliminar esta actividad personalizada?</p>
+            <div class="form-actions" style="margin-top:1.5rem;">
+                <button class="btn btn-secondary" onclick="closeDeleteCustomActivityModal()">Cancelar</button>
+                <button class="btn btn-danger" id="confirm-delete-custom-activity-btn">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function closeDeleteConfirmModal() {
+    document.getElementById('delete-confirm-modal').style.display = 'none';
+    document.body.style.overflow = '';
+    window._activityToDelete = null;
+}
+</script>
+
+
+<!-- Fallback para mostrar botón de login si Firebase no carga -->
+<script>
+// Fallback: mostrar botón de login si Firebase no carga en 5 segundos
+setTimeout(() => {
+    const userInfo = document.getElementById('user-info');
+    if (userInfo && !userInfo.innerHTML.includes('Iniciar Sesión') && !userInfo.innerHTML.includes('Usuario autenticado')) {
+        console.log('Firebase no cargó, mostrando botón de fallback');
+        userInfo.innerHTML = `
+            <button onclick="firebaseService.signInWithGoogle()" 
+                    style="background: #4285f4; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Iniciar Sesión con Google
+            </button>
+        `;
+    }
+}, 5000);
+</script>
+
+<!-- Service Worker Registration -->
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('sw.js')
+                .then(function(registration) {
+                    console.log('ServiceWorker registration successful');
+                })
+                .catch(function(err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+        });
+    }
+</script>
+</body>
+</html>
