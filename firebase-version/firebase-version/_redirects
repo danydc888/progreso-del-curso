@@ -1,0 +1,9 @@
+# Netlify redirects file
+# Redirect all routes to index.html for SPA behavior
+/*    /index.html   200
+
+# Cache static assets (corrected format)
+/styles.css    /styles.css    200    Cache-Control: max-age=31536000
+/profiles.css  /profiles.css  200    Cache-Control: max-age=31536000
+/app.js        /app.js        200    Cache-Control: max-age=31536000
+/profiles.js   /profiles.js   200    Cache-Control: max-age=31536000

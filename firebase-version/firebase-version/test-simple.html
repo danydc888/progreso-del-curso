@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Firebase Simple</title>
+</head>
+<body>
+    <h1>Test Firebase Simple</h1>
+    <div id="status">Cargando...</div>
+    <div id="user-info"></div>
+    
+    <!-- Firebase Configuration -->
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="firebase-services.js"></script>
+    
+    <script>
+        // Test simple
+        console.log('Página cargada');
+        
+        // Verificar si Firebase está disponible
+        setTimeout(() => {
+            const status = document.getElementById('status');
+            if (window.firebaseService) {
+                status.innerHTML = '✅ Firebase Service disponible';
+                console.log('Firebase Service:', window.firebaseService);
+            } else {
+                status.innerHTML = '❌ Firebase Service NO disponible';
+                console.log('Firebase Service no encontrado');
+            }
+        }, 2000);
+    </script>
+</body>
+</html>
+

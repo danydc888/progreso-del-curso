@@ -1,0 +1,22 @@
+{
+  "name": "Progreso del Curso",
+  "short_name": "Progreso",
+  "description": "Aplicación para seguimiento del progreso escolar",
+  "start_url": "https://progresodelcurso.netlify.app/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

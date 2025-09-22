@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Libro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="profiles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header" style="margin-bottom:0.5rem;">
+            <div class="header-content" style="display:flex;align-items:center;gap:1rem;">
+                <button class="btn btn-back" onclick="window.location.href='index.html#books'">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </button>
+            </div>
+            <h1 id="book-title" class="book-title-centered"></h1>
+            <div class="profile-info"></div>
+        </header>
+        <main class="main-content">
+            <div id="book-detail-section">
+                <h2 id="book-title" style="margin-bottom:1.5rem;"></h2>
+                <div id="book-detail-container"></div>
+            </div>
+        </main>
+    </div>
+    <script src="libro.js"></script>
+</body>
+</html>

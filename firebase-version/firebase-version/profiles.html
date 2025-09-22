@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seleccionar Perfil - Progreso del Curso</title>
+    <link rel="stylesheet" href="profiles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="profiles-container">
+        <!-- Header -->
+        <header class="profiles-header">
+            <div class="header-content">
+                <h1><i class="fas fa-graduation-cap"></i> Progreso del Curso</h1>
+                <p>Selecciona un perfil para continuar</p>
+                
+                <!-- Firebase Authentication -->
+                <div id="user-info" style="margin-top: 1rem;">
+                    <!-- Botón de login o info del usuario se mostrará aquí -->
+                </div>
+            </div>
+        </header>
+
+        <!-- Profiles Section -->
+        <main class="profiles-main">
+            <div class="profiles-grid" id="profiles-grid">
+                <!-- Los perfiles se generarán dinámicamente aquí -->
+            </div>
+
+            <!-- Add Profile Button -->
+            <div class="add-profile-card" id="add-profile-card">
+                <div class="add-profile-content">
+                    <i class="fas fa-plus-circle"></i>
+                    <h3>Agregar Perfil</h3>
+                    <p>Crear nuevo perfil de alumno</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Create Profile Modal -->
+        <div class="modal" id="create-profile-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Crear Nuevo Perfil</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <form id="create-profile-form">
+                    <div class="form-group">
+                        <label for="student-name">Nombre del Alumno</label>
+                        <input type="text" id="student-name" placeholder="Ingresa el nombre del alumno" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Selecciona un Avatar</label>
+                        <div class="avatar-selection">
+                            <div class="avatar-option" data-avatar="boy1">
+                                <div class="avatar-preview boy1">👦</div>
+                            </div>
+                            <div class="avatar-option" data-avatar="girl1">
+                                <div class="avatar-preview girl1">👧</div>
+                            </div>
+                            <div class="avatar-option" data-avatar="cat">
+                                <div class="avatar-preview cat">🐱</div>
+                            </div>
+                            <div class="avatar-option" data-avatar="robot">
+                                <div class="avatar-preview robot">🤖</div>
+                            </div>
+                            <div class="avatar-option" data-avatar="alien">
+                                <div class="avatar-preview alien">👽</div>
+                            </div>
+                            <div class="avatar-option" data-avatar="sunglasses">
+                                <div class="avatar-preview sunglasses">😎</div>
+                            </div>
+                            <div class="avatar-option" data-avatar="lion">
+                                <div class="avatar-preview lion">🦁</div>
+                            </div>
+                            <div class="avatar-option" data-avatar="bee">
+                                <div class="avatar-preview bee">🐝</div>
+                            </div>
+                            <div class="avatar-option" data-avatar="dog">
+                                <div class="avatar-preview dog">🐶</div>
+                            </div>
+                            <div class="avatar-option" data-avatar="sparkles">
+                                <div class="avatar-preview sparkles">✨</div>
+                            </div>
+                            <div class="avatar-option" data-avatar="unicorn">
+                                <div class="avatar-preview unicorn">🦄</div>
+                            </div>
+                            <div class="avatar-option" data-avatar="chick">
+                                <div class="avatar-preview chick">🐥</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="student-grade">Grado</label>
+                        <input type="text" id="student-grade" placeholder="Ej. Preschool 1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="student-cycle">Ciclo Escolar</label>
+                        <input type="text" id="student-cycle" placeholder="Ej. Ciclo 2025-2026" required>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary modal-close">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Crear Perfil</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Edit Profile Modal -->
+        <div class="modal" id="edit-profile-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Editar Perfil</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <form id="edit-profile-form">
+                    <input type="hidden" id="edit-profile-id">
+                    <div class="form-group">
+                        <label for="edit-student-name">Nombre del Alumno</label>
+                        <input type="text" id="edit-student-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Selecciona un Avatar</label>
+                        <div class="avatar-selection" id="edit-avatar-selection">
+                            <!-- Los avatares se generarán dinámicamente -->
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-student-grade">Grado</label>
+                        <input type="text" id="edit-student-grade" placeholder="Ej. Preschool 1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-student-cycle">Ciclo Escolar</label>
+                        <input type="text" id="edit-student-cycle" placeholder="Ej. Ciclo 2025-2026" required>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary modal-close">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Delete Profile Modal -->
+        <div class="modal" id="delete-profile-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Eliminar Perfil</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="delete-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>¿Estás seguro de que quieres eliminar este perfil?</p>
+                        <p class="warning-text">Esta acción eliminará todos los datos del alumno incluyendo materias y calificaciones. Esta acción no se puede deshacer.</p>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary modal-close">Cancelar</button>
+                        <button type="button" class="btn btn-danger" id="confirm-delete">Eliminar Perfil</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="profiles.js"></script>
+    
+    <!-- Firebase Configuration - Debug Version -->
+    <script>
+        console.log('=== INICIANDO DEBUG FIREBASE EN PROFILES ===');
+        
+        // Manejador de errores global para capturar errores que cierran la página
+        window.addEventListener('error', function(event) {
+            console.error('🚨 ERROR GLOBAL CAPTURADO:', event.error);
+            console.error('Mensaje:', event.message);
+            console.error('Archivo:', event.filename);
+            console.error('Línea:', event.lineno);
+            console.error('Columna:', event.colno);
+            
+            // Mostrar error en pantalla
+            const userInfo = document.getElementById('user-info');
+            if (userInfo) {
+                userInfo.innerHTML = `
+                    <div style="background: #fef2f2; border: 2px solid #ef4444; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <h3 style="margin: 0 0 0.5rem 0; color: #dc2626;">🚨 Error Global</h3>
+                        <p style="margin: 0 0 0.5rem 0; color: #dc2626;"><strong>Error:</strong> ${event.message}</p>
+                        <p style="margin: 0; color: #dc2626; font-size: 0.8rem;"><strong>Archivo:</strong> ${event.filename}:${event.lineno}</p>
+                    </div>
+                `;
+            }
+        });
+        
+        // Manejador de errores no capturados
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('🚨 PROMISE RECHAZADA:', event.reason);
+            console.error('Promise:', event.promise);
+            
+            // Mostrar error en pantalla
+            const userInfo = document.getElementById('user-info');
+            if (userInfo) {
+                userInfo.innerHTML = `
+                    <div style="background: #fef2f2; border: 2px solid #ef4444; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <h3 style="margin: 0 0 0.5rem 0; color: #dc2626;">🚨 Error de Promise</h3>
+                        <p style="margin: 0; color: #dc2626;"><strong>Error:</strong> ${event.reason}</p>
+                    </div>
+                `;
+            }
+        });
+        
+        // Verificar que el elemento user-info existe
+        const userInfo = document.getElementById('user-info');
+        console.log('Elemento user-info encontrado:', userInfo);
+        
+        if (!userInfo) {
+            console.error('ERROR: No se encontró el elemento user-info');
+            alert('ERROR: No se encontró el elemento user-info');
+        } else {
+            console.log('Elemento user-info encontrado correctamente');
+        }
+        
+        // Mostrar botón de prueba inmediatamente
+        if (userInfo) {
+            userInfo.innerHTML = `
+                <div style="background: #f0f9ff; border: 2px solid #0ea5e9; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <h3 style="margin: 0 0 0.5rem 0; color: #0c4a6e;">🧪 MODO DEBUG - PROFILES</h3>
+                    <p style="margin: 0 0 0.5rem 0; color: #0c4a6e;">Firebase se está cargando...</p>
+                    <button onclick="alert('Botón de prueba funcionando!')" 
+                            style="background: #0ea5e9; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">
+                        Botón de Prueba
+                    </button>
+                </div>
+            `;
+            console.log('Botón de prueba mostrado en profiles');
+        }
+        
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBDfCnPZnY5RMp5DGDLKXklcAHDJUGdbOs",
+            authDomain: "progreso-del-curso.firebaseapp.com",
+            projectId: "progreso-del-curso",
+            storageBucket: "progreso-del-curso.firebasestorage.app",
+            messagingSenderId: "494825516539",
+            appId: "1:494825516539:web:925cfa0dd0c0a7999cef5e"
+        };
+        
+        console.log('Configuración Firebase:', firebaseConfig);
+        
+        // Cargar Firebase desde CDN - Versión 9 (compatible con navegadores)
+        const script1 = document.createElement('script');
+        script1.src = 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js';
+        script1.onload = () => {
+            console.log('✅ Firebase App cargado en profiles');
+            
+            const script2 = document.createElement('script');
+            script2.src = 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js';
+            script2.onload = () => {
+                console.log('✅ Firebase Auth cargado en profiles');
+                
+                const script3 = document.createElement('script');
+                script3.src = 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js';
+                script3.onload = () => {
+                    console.log('✅ Firebase Firestore cargado en profiles');
+                    
+                    try {
+                        // Inicializar Firebase
+                        const app = firebase.initializeApp(firebaseConfig);
+                        const auth = firebase.auth();
+                        const db = firebase.firestore();
+                        const provider = new firebase.auth.GoogleAuthProvider();
+                        
+                        console.log('✅ Firebase inicializado correctamente en profiles');
+                        
+                         // Mostrar botón de Google Login
+                         if (userInfo) {
+                             userInfo.innerHTML = `
+                                 <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                                     <button onclick="signInWithGoogle()" 
+                                             style="background: #4285f4; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                         <svg width="20" height="20" viewBox="0 0 24 24">
+                                             <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                             <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                             <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                             <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                                         </svg>
+                                         Iniciar Sesión con Google
+                                     </button>
+                                     <button onclick="testButton()" 
+                                             style="background: #10b981; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.9rem;">
+                                         🧪 Botón de Prueba
+                                     </button>
+                                 </div>
+                             `;
+                             console.log('✅ Botón de Google Login mostrado en profiles');
+                         }
+                         
+                        // Función de prueba (sin Firebase)
+                        window.testButton = function() {
+                            console.log('🧪 BOTÓN DE PRUEBA FUNCIONANDO');
+                            alert('¡Botón de prueba funcionando! La página no se cierra.');
+                        };
+                        
+                        // Función para iniciar sesión con Google (usando redirección)
+                        window.signInWithGoogle = async function() {
+                            console.log('🚀 FUNCIÓN signInWithGoogle LLAMADA');
+                            
+                            try {
+                                console.log('=== INICIANDO LOGIN ===');
+                                console.log('Firebase auth:', firebase.auth());
+                                console.log('Provider:', provider);
+                                console.log('Firebase object:', firebase);
+                                console.log('Window object:', window);
+                                
+                                // Mostrar mensaje de carga
+                                if (userInfo) {
+                                    userInfo.innerHTML = `
+                                        <div style="background: #fef3c7; border: 2px solid #f59e0b; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                                            <h3 style="margin: 0 0 0.5rem 0; color: #92400e;">🔄 Iniciando Sesión...</h3>
+                                            <p style="margin: 0; color: #92400e;">Redirigiendo a Google...</p>
+                                        </div>
+                                    `;
+                                }
+                                
+                                // Usar popup con manejo robusto de errores
+                                console.log('Ejecutando signInWithPopup...');
+                                console.log('Antes de signInWithPopup - Firebase auth:', firebase.auth());
+                                console.log('Antes de signInWithPopup - Provider:', provider);
+                                
+                                // Verificar que no hay otro popup abierto
+                                if (window.isSigningIn) {
+                                    console.log('Ya hay un proceso de login en curso, esperando...');
+                                    return;
+                                }
+                                
+                                window.isSigningIn = true;
+                                
+                                try {
+                                    const result = await firebase.auth().signInWithPopup(provider);
+                                    console.log('✅ Login exitoso con popup:', result);
+                                    
+                                    if (result.user) {
+                                        console.log('Usuario autenticado:', result.user);
+                                        showUserInfo(result.user);
+                                    }
+                                    
+                                } catch (popupError) {
+                                    console.error('Error en popup:', popupError);
+                                    
+                                    // Si el popup fue bloqueado o cerrado, intentar con redirección
+                                    if (popupError.code === 'auth/popup-closed-by-user' || 
+                                        popupError.code === 'auth/popup-blocked' ||
+                                        popupError.message.includes('popup')) {
+                                        
+                                        console.log('Popup falló, intentando con redirección...');
+                                        await firebase.auth().signInWithRedirect(provider);
+                                        return; // La redirección se ejecutará
+                                    }
+                                    
+                                    throw popupError; // Re-lanzar otros errores
+                                } finally {
+                                    window.isSigningIn = false;
+                                }
+                                
+                            } catch (error) {
+                                console.error('❌ ERROR EN LOGIN:', error);
+                                console.error('Tipo de error:', typeof error);
+                                console.error('Mensaje:', error.message);
+                                console.error('Stack:', error.stack);
+                                
+                                // Mostrar error en pantalla con más detalles
+                                if (userInfo) {
+                                    userInfo.innerHTML = `
+                                        <div style="background: #fef2f2; border: 2px solid #ef4444; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                                            <h3 style="margin: 0 0 0.5rem 0; color: #dc2626;">❌ Error en Login</h3>
+                                            <p style="margin: 0 0 0.5rem 0; color: #dc2626;"><strong>Error:</strong> ${error.message}</p>
+                                            <p style="margin: 0 0 0.5rem 0; color: #dc2626; font-size: 0.8rem;"><strong>Tipo:</strong> ${typeof error}</p>
+                                            <p style="margin: 0 0 0.5rem 0; color: #dc2626; font-size: 0.8rem;"><strong>Stack:</strong> ${error.stack || 'No disponible'}</p>
+                                            <p style="margin: 0 0 0.5rem 0; color: #dc2626; font-size: 0.8rem;"><strong>Firebase:</strong> ${typeof firebase}</p>
+                                            <p style="margin: 0 0 0.5rem 0; color: #dc2626; font-size: 0.8rem;"><strong>Provider:</strong> ${typeof provider}</p>
+                                            <button onclick="signInWithGoogle()" 
+                                                    style="background: #4285f4; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; margin-top: 0.5rem;">
+                                                Intentar de Nuevo
+                                            </button>
+                                        </div>
+                                    `;
+                                }
+                                
+                                // También mostrar alert para asegurar que se vea
+                                alert('Error al iniciar sesión: ' + error.message + '\n\nTipo: ' + typeof error + '\n\nStack: ' + (error.stack || 'No disponible'));
+                            }
+                        };
+                         
+                         // Función para mostrar información del usuario
+                         function showUserInfo(user) {
+                             if (userInfo) {
+                                 userInfo.innerHTML = `
+                                     <div style="background: #f0fdf4; border: 2px solid #22c55e; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                                         <h3 style="margin: 0 0 0.5rem 0; color: #166534;">✅ Usuario Autenticado</h3>
+                                         <p style="margin: 0 0 0.5rem 0; color: #166534;">Hola, ${user.displayName || user.email}!</p>
+                                         <button onclick="signOutGoogle()" 
+                                                 style="background: #ef4444; color: white; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">
+                                             Cerrar Sesión
+                                         </button>
+                                     </div>
+                                 `;
+                             }
+                         }
+                         
+                         // Verificar si hay un resultado de redirección
+                         firebase.auth().getRedirectResult().then((result) => {
+                             console.log('Resultado de redirección:', result);
+                             console.log('User en resultado:', result.user);
+                             console.log('Credential en resultado:', result.credential);
+                             
+                             if (result.user) {
+                                 // Usuario logueado exitosamente
+                                 const user = result.user;
+                                 console.log('Login exitoso desde redirección:', user.email);
+                                 showUserInfo(user);
+                             } else {
+                                 console.log('No hay usuario en resultado de redirección');
+                             }
+                         }).catch((error) => {
+                             console.error('Error en redirección:', error);
+                         });
+                         
+                         // Verificar estado de autenticación (esto se ejecuta siempre)
+                         firebase.auth().onAuthStateChanged((user) => {
+                             console.log('Estado de autenticación cambiado:', user);
+                             if (user) {
+                                 console.log('Usuario logueado:', user.email);
+                                 showUserInfo(user);
+                             } else {
+                                 console.log('No hay usuario logueado');
+                             }
+                         });
+                         
+                         // Función para cerrar sesión
+                         window.signOutGoogle = async function() {
+                             try {
+                                 await firebase.auth().signOut();
+                                 console.log('Logout exitoso');
+                                 location.reload(); // Recargar la página
+                             } catch (error) {
+                                 console.error('Error en logout:', error);
+                                 alert('Error al cerrar sesión: ' + error.message);
+                             }
+                         };
+                        
+                    } catch (error) {
+                        console.error('❌ Error inicializando Firebase en profiles:', error);
+                        if (userInfo) {
+                            userInfo.innerHTML = `
+                                <div style="background: #fef2f2; border: 2px solid #ef4444; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                                    <h3 style="margin: 0 0 0.5rem 0; color: #dc2626;">❌ ERROR FIREBASE</h3>
+                                    <p style="margin: 0; color: #dc2626;">Error: ${error.message}</p>
+                                </div>
+                            `;
+                        }
+                    }
+                };
+                script3.onerror = () => {
+                    console.error('❌ Error cargando Firebase Firestore en profiles');
+                };
+                document.head.appendChild(script3);
+            };
+            script2.onerror = () => {
+                console.error('❌ Error cargando Firebase Auth en profiles');
+            };
+            document.head.appendChild(script2);
+        };
+        script1.onerror = () => {
+            console.error('❌ Error cargando Firebase App en profiles');
+        };
+        document.head.appendChild(script1);
+        
+        console.log('=== FIN DEBUG FIREBASE EN PROFILES ===');
+    </script>
+</body>
+</html>
