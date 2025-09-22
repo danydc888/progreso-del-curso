@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Profile Display</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .profile-info { display: flex; align-items: center; gap: 10px; margin: 20px 0; }
+        .profile-avatar-small { 
+            width: 40px; height: 40px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: white; 
+            font-weight: bold;
+        }
+        .profile-name { font-size: 16px; font-weight: 500; }
+        button { padding: 10px 20px; margin: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Test de Visualización de Perfil</h1>
+    
+    <div class="profile-info">
+        <div class="profile-avatar-small" id="profile-avatar">
+            <!-- Avatar will be populated by JavaScript -->
+        </div>
+        <div class="profile-name" id="profile-name">
+            <!-- Name will be populated by JavaScript -->
+        </div>
+    </div>
+    
+    <button onclick="testProfile()">Probar Perfil</button>
+    <button onclick="clearProfile()">Limpiar Perfil</button>
+    <button onclick="setTestProfile()">Establecer Perfil de Prueba</button>
+    
+    <div id="debug-info"></div>
+
+    <script>
+        function displayCurrentProfile() {
+            console.log('displayCurrentProfile called');
+            const profileAvatar = document.getElementById('profile-avatar');
+            const profileName = document.getElementById('profile-name');
+            
+            console.log('Elements found:', { profileAvatar, profileName });
+            
+            if (!profileAvatar || !profileName) {
+                console.log('Profile elements not found');
+                return;
+            }
+            
+            const currentProfile = JSON.parse(sessionStorage.getItem('currentProfile') || 'null');
+            console.log('Current profile from sessionStorage:', currentProfile);
+            
+            if (!currentProfile) {
+                console.log('No current profile');
+                profileAvatar.textContent = '?';
+                profileName.textContent = 'Sin perfil';
+                profileAvatar.style.backgroundColor = '#ccc';
+                return;
+            }
+            
+            // Generar iniciales del nombre
+            const initials = currentProfile.name
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase())
+                .join('')
+                .substring(0, 2);
+            
+            console.log('Setting profile info:', { initials, name: currentProfile.name });
+            
+            // Actualizar avatar con iniciales
+            profileAvatar.textContent = initials;
+            
+            // Actualizar nombre del perfil
+            profileName.textContent = currentProfile.name;
+            
+            // Aplicar color del perfil al avatar si existe
+            if (currentProfile.color) {
+                const colorMap = {
+                    'blue': '#3b82f6',
+                    'purple': '#8b5cf6', 
+                    'red': '#ef4444',
+                    'green': '#10b981',
+                    'orange': '#f59e0b',
+                    'pink': '#ec4899',
+                    'teal': '#14b8a6',
+                    'indigo': '#6366f1',
+                    'yellow': '#eab308',
+                    'emerald': '#059669',
+                    'rose': '#f43f5e',
+                    'slate': '#64748b'
+                };
+                const color = colorMap[currentProfile.color] || '#3b82f6';
+                profileAvatar.style.backgroundColor = color;
+                console.log('Applied color:', color);
+            } else {
+                // Color por defecto si no hay color específico
+                profileAvatar.style.backgroundColor = '#3b82f6';
+            }
+        }
+        
+        function testProfile() {
+            displayCurrentProfile();
+            updateDebugInfo();
+        }
+        
+        function clearProfile() {
+            sessionStorage.removeItem('currentProfile');
+            displayCurrentProfile();
+            updateDebugInfo();
+        }
+        
+        function setTestProfile() {
+            const testProfile = {
+                id: 'test123',
+                name: 'Juan Pérez',
+                avatar: 'boy1',
+                grade: '3er Grado',
+                cycle: '2024-2025',
+                color: 'blue'
+            };
+            sessionStorage.setItem('currentProfile', JSON.stringify(testProfile));
+            displayCurrentProfile();
+            updateDebugInfo();
+        }
+        
+        function updateDebugInfo() {
+            const debugDiv = document.getElementById('debug-info');
+            const profile = JSON.parse(sessionStorage.getItem('currentProfile') || 'null');
+            debugDiv.innerHTML = `
+                <h3>Debug Info:</h3>
+                <pre>${JSON.stringify(profile, null, 2)}</pre>
+            `;
+        }
+        
+        // Cargar perfil al iniciar
+        window.onload = function() {
+            displayCurrentProfile();
+            updateDebugInfo();
+        };
+    </script>
+</body>
+</html>
